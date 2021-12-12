@@ -2,23 +2,30 @@ defmodule AOC2021 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
-  def iterate(fish) do
-    {fish, count} = fish |> map_reduce(0, fn
-      0, acc -> {6, acc + 1}
-      n, acc -> {n - 1, acc}
-    end)
-    fish ++ (Stream.cycle([8]) |> take(count))
+  def iterate_counts([a, b, c, d, e, f, g, h, i]) do
+    [b, c, d, e, f, g, h + a, i, a]
   end
 
   def day6 do
-    fish = File.read!("day6_input")
-    |> split("\n", trim: true) |> List.first() |> split(",", trim: true) |> map(&to_integer/1)
-    generations = Stream.unfold(fish, fn x ->
-      f = iterate(x)
-      {f, f}
-    end)
-    IO.inspect(generations |> at(80 - 1) |> length)
+    empty = 0..8 |> into(%{}, &{&1, 0})
 
+    fish =
+      File.read!("day6_input")
+      |> split("\n", trim: true)
+      |> List.first()
+      |> split(",", trim: true)
+      |> map(&to_integer/1)
+
+    fish_counts = Map.merge(empty, frequencies(fish)) |> Map.values()
+
+    generations =
+      Stream.unfold(fish_counts, fn x ->
+        f = iterate_counts(x)
+        {f, f}
+      end)
+
+    IO.inspect(generations |> at(80 - 1) |> sum)
+    IO.inspect(generations |> at(256 - 1) |> sum)
   end
 end
 
