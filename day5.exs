@@ -61,7 +61,7 @@ defmodule AOC2021 do
         x |> reduce(map, fn x, map -> Map.update(map, x, 1, &(&1 + 1)) end)
       end)
 
-    points |> Enum.count(fn {_, x} -> x > 1 end)
+    points |> count(fn {_, x} -> x > 1 end)
   end
 
   def day5 do
