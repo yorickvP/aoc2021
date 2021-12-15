@@ -21,54 +21,33 @@ defmodule AOC2021.Day11 do
     use GenServer
     @impl true
     def init(level) do
-      {:ok, {level, false, [], false}}
+      {:ok, {level, false, []}}
     end
 
     @impl true
-    def handle_cast({:neighs, neighs}, {level, flashed, _neighs, false}) do
-      {:noreply, {level, flashed, neighs, false}}
+    def handle_cast({:neighs, neighs}, {level, false, _neighs}) do
+      {:noreply, {level, false, neighs}}
     end
 
     @impl true
-    def handle_cast(:maybe_flash, {level, false, neighs, true}) do
-      if level > 9 do
-        neighs |> Enum.each(&GenServer.cast(&1, :expose))
-        {:noreply, {level, true, neighs, true}}
-      else
-        {:noreply, {level, false, neighs, true}}
-      end
+    def handle_cast(:expose, {level, true, neighs}) do
+      {:noreply, {level, true, neighs}}
     end
 
     @impl true
-    def handle_cast(:maybe_flash, {level, true, neighs, true}) do
-      # assert level over 9
-      {:noreply, {level, true, neighs, true}}
-    end
-
-    @impl true
-    def handle_cast(:expose, {level, true, neighs, true}) do
-      {:noreply, {level, true, neighs, true}}
-    end
-
-    @impl true
-    def handle_cast(:expose, {level, false, neighs, true}) do
+    def handle_cast(:expose, {level, false, neighs}) do
       level = level + 1
 
       if level > 9 do
         neighs |> Enum.each(&GenServer.cast(&1, :expose))
-        {:noreply, {level, true, neighs, true}}
+        {:noreply, {level, true, neighs}}
       else
-        {:noreply, {level, false, neighs, true}}
+        {:noreply, {level, false, neighs}}
       end
     end
 
     @impl true
-    def handle_call(:time, _, {level, _flashed, neighs, false}) do
-      {:reply, :ok, {level + 1, false, neighs, true}}
-    end
-
-    @impl true
-    def handle_call(:end, _, {level, flashed, neighs, true}) do
+    def handle_call(:end, _, {level, flashed, neighs}) do
       if flashed do
         GenServer.cast(:cnt, :flash)
       end
@@ -78,12 +57,12 @@ defmodule AOC2021.Day11 do
           0
         else
           level
-        end, false, neighs, false}}
+        end, false, neighs}}
     end
 
     @impl true
-    def handle_call(:get, _from, {level, flashed, neighs, false}) do
-      {:reply, level, {level, flashed, neighs, false}}
+    def handle_call(:get, _from, {level, false, neighs}) do
+      {:reply, level, {level, false, neighs}}
     end
   end
 
@@ -102,8 +81,7 @@ defmodule AOC2021.Day11 do
         {field, [field.n.n | acc]}
       end)
 
-    all_nodes |> each(&GenServer.call(&1, :time))
-    all_nodes |> each(&GenServer.cast(&1, :maybe_flash))
+    all_nodes |> each(&GenServer.cast(&1, :expose))
     :timer.sleep(1)
     field |> Field.each(&GenServer.call(&1, :end))
   end
