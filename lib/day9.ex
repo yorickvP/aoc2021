@@ -1,25 +1,25 @@
 defmodule AOC2021.Day9 do
   defmodule Zipper do
-    defstruct [:left, :n, :right]
+    defstruct [:left, :n, :right, :pos]
 
     def make([h | t]) do
-      %Zipper{left: [], n: h, right: t}
+      %Zipper{left: [], n: h, right: t, pos: 0}
     end
 
     def set(z, n) do
-      %Zipper{left: z.left, n: n, right: z.right}
+      %Zipper{left: z.left, n: n, right: z.right, pos: z.pos}
     end
 
-    def dec(%Zipper{left: [h | t], n: n, right: r}) do
-      %Zipper{left: t, n: h, right: [n | r]}
+    def dec(%Zipper{left: [h | t], n: n, right: r, pos: p}) do
+      %Zipper{left: t, n: h, right: [n | r], pos: p - 1}
     end
 
     def dec(_) do
       nil
     end
 
-    def inc(%Zipper{left: l, n: n, right: [h | t]}) do
-      %Zipper{left: [n | l], n: h, right: t}
+    def inc(%Zipper{left: l, n: n, right: [h | t], pos: p}) do
+      %Zipper{left: [n | l], n: h, right: t, pos: p + 1}
     end
 
     def inc(_) do
@@ -27,7 +27,7 @@ defmodule AOC2021.Day9 do
     end
 
     def map(z, f) do
-      %Zipper{left: Enum.map(z.left, f), n: f.(z.n), right: Enum.map(z.right, f)}
+      %Zipper{left: Enum.map(z.left, f), n: f.(z.n), right: Enum.map(z.right, f), pos: z.pos}
     end
 
     def to_list(%Zipper{left: [], n: n, right: r}) do
@@ -52,6 +52,10 @@ defmodule AOC2021.Day9 do
 
     def right(z) do
       Zipper.map(z, &inc/1)
+    end
+
+    def pos(z) do
+      {z.pos, z.n.pos}
     end
 
     def up(z) do

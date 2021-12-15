@@ -28,5 +28,5 @@ defmodule AOC2021Test do
   # aoc_test(12, {10})
   aoc_test(13, {17, "#####\n#   #\n#   #\n#   #\n#####\n"})
   # aoc_test(14, {1588})
-  # aoc_test(15, {40})
+  aoc_test(15, {40})
 end
