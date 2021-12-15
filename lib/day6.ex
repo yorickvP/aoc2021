@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day6 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
@@ -6,13 +6,12 @@ defmodule AOC2021 do
     [b, c, d, e, f, g, h + a, i, a]
   end
 
-  def day6 do
+  def input_format do :line end
+  def run(input) do
     empty = 0..8 |> into(%{}, &{&1, 0})
 
     fish =
-      File.read!("day6_input")
-      |> split("\n", trim: true)
-      |> List.first()
+      input
       |> split(",", trim: true)
       |> map(&to_integer/1)
 
@@ -24,9 +23,7 @@ defmodule AOC2021 do
         {f, f}
       end)
 
-    IO.inspect(generations |> at(80 - 1) |> sum)
-    IO.inspect(generations |> at(256 - 1) |> sum)
+    {generations |> at(80 - 1) |> sum, generations |> at(256 - 1) |> sum}
   end
 end
 
-AOC2021.day6()

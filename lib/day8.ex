@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day8 do
   import Enum
   import String, only: [split: 1, split: 3]
 
@@ -21,10 +21,10 @@ defmodule AOC2021 do
     end
   end
 
-  def day8 do
+  def input_format do :lines end
+  def run(input) do
     entries =
-      File.read!("day8_input")
-      |> split("\n", trim: true)
+      input
       |> map(&split(&1, " | ", trim: true))
       |> map(fn [a, b] -> {split(a), split(b)} end)
 
@@ -43,8 +43,7 @@ defmodule AOC2021 do
           end)
       end
 
-    IO.inspect(count)
+    {count}
   end
 end
 
-AOC2021.day8()

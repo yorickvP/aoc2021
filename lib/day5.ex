@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day5 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
@@ -64,18 +64,17 @@ defmodule AOC2021 do
     points |> count(fn {_, x} -> x > 1 end)
   end
 
-  def day5 do
+  def input_format do :lines end
+  def run(input) do
     lines =
-      for line <-
-            File.read!("day5_input")
-            |> split("\n", trim: true) do
+      for line <- input do
         [a, b] = split(line, " -> ", trim: true, parts: 2) |> map(&Point.parse/1)
         {a, b}
       end
 
-    IO.inspect(lines |> filter(&is_straight/1) |> count_intersections)
-    IO.inspect(lines |> count_intersections)
+    a = lines |> filter(&is_straight/1) |> count_intersections
+    b = lines |> count_intersections
+    {a, b}
   end
 end
 
-AOC2021.day5()

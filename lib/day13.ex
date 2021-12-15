@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day13 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
@@ -16,10 +16,9 @@ defmodule AOC2021 do
     end
   end
 
-  def day13 do
-    [points, folds] =
-      File.read!("day13_input")
-      |> split("\n\n", trim: true)
+  def input_format do nil end
+  def run(input) do
+    [points, folds] = input |> split("\n\n", trim: true)
 
     points =
       points
@@ -37,14 +36,14 @@ defmodule AOC2021 do
       end)
 
     # part 1
-    points |> MapSet.new(&mirror(List.first(folds), &1)) |> MapSet.size() |> IO.inspect()
+    a = points |> MapSet.new(&mirror(List.first(folds), &1)) |> MapSet.size()
     # part 2
     folded = folds |> reduce(points, fn x, acc -> MapSet.new(acc, &mirror(x, &1)) end)
 
     {max_x, max_y} =
       folded |> reduce({0, 0}, fn {a, b}, {x, y} -> {Kernel.max(a, x), Kernel.max(b, y)} end)
 
-    for y <- 0..max_y, into: "" do
+    b = for y <- 0..max_y, into: "" do
       for x <- 0..max_x, into: "" do
         if folded |> MapSet.member?({x, y}) do
           "#"
@@ -53,8 +52,7 @@ defmodule AOC2021 do
         end
       end <> "\n"
     end
-    |> IO.write()
+    {a, b}
   end
 end
 
-AOC2021.day13()

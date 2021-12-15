@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day4 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
@@ -39,10 +39,8 @@ defmodule AOC2021 do
     end
   end
 
-  def day4 do
-    [numbers | boards] =
-      File.read!("day4_input")
-      |> split("\n\n", trim: true)
+  def input_format do :sections end
+  def run([numbers | boards]) do
 
     numbers = numbers |> split(",", trim: true) |> map(&to_integer/1)
 
@@ -52,12 +50,9 @@ defmodule AOC2021 do
         for f <- lines, do: String.split(f) |> map(&to_integer/1)
       end
 
-    {_turn, score} = boards |> map(&board_winning(&1, numbers)) |> min_by(&elem(&1, 0))
-    IO.inspect(score)
-
-    {_turn, score} = boards |> map(&board_winning(&1, numbers)) |> max_by(&elem(&1, 0))
-    IO.inspect(score)
+    {_turn, score_a} = boards |> map(&board_winning(&1, numbers)) |> min_by(&elem(&1, 0))
+    {_turn, score_b} = boards |> map(&board_winning(&1, numbers)) |> max_by(&elem(&1, 0))
+    {score_a, score_b}
   end
 end
 
-AOC2021.day4()

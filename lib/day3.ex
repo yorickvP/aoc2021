@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day3 do
   import Enum
 
   def count_bits(bitset) do
@@ -33,19 +33,17 @@ defmodule AOC2021 do
     end
   end
 
-  def day3 do
+  def input_format do :lines end
+  def run(input) do
     bits =
-      File.read!("day3_input")
-      |> String.split("\n", trim: true)
+      input
       |> map(fn x -> map(String.split(x, "", trim: true), &String.to_integer/1) end)
 
     {gamma, epsilon} = part1(bits)
-    IO.inspect(gamma * epsilon)
     numbers = bits |> map(&Integer.undigits(&1, 2))
     oxy = part2(zip(bits, numbers), &count_bits/1)
     co2 = part2(zip(bits, numbers), &(1 - count_bits(&1)))
-    IO.inspect(oxy * co2)
+    {gamma * epsilon, oxy * co2}
   end
 end
 
-AOC2021.day3()

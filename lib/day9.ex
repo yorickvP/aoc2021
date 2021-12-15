@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day9 do
   defmodule Zipper do
     defstruct [:left, :n, :right]
 
@@ -152,18 +152,18 @@ defmodule AOC2021 do
     {field, acc}
   end
 
-  def day9 do
+  def input_format do :lines end
+  def run(input) do
     entries =
-      File.read!("day9_input")
-      |> split("\n", trim: true)
-      |> map(fn x -> split(x, "", trim: true) |> map(&String.to_integer/1) end)
+      input
+      |> map(fn x -> split(x, "", trim: true) |> AOC2021.ints end)
 
     field = Field.make(entries)
-    IO.inspect(count_lows(field))
+    a = count_lows(field)
 
     {_, acc} = get_basins(field) # todo: assert all 9's
-    acc |> sort(:desc) |> take(3) |> product |> IO.inspect()
+    b = acc |> sort(:desc) |> take(3) |> product
+    {a, b}
   end
 end
 
-AOC2021.day9()

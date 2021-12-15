@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day7 do
   import Enum
   import String, only: [split: 3, to_integer: 1]
 
@@ -14,20 +14,19 @@ defmodule AOC2021 do
     crabs |> reduce(0, fn x, acc -> acc + triang(abs(x - n)) end)
   end
 
-  def day7 do
+  def input_format do :line end
+  def run(input) do
     crabs =
-      File.read!("day7_input")
-      |> split("\n", trim: true)
-      |> List.first()
+      input
       |> split(",", trim: true)
       |> map(&to_integer/1)
 
     solutions = to_list(min(crabs)..max(crabs)) |> map(&solution1_cost(crabs, &1))
-    IO.inspect(min(solutions))
+    a = min(solutions)
 
     solutions = to_list(min(crabs)..max(crabs)) |> map(&solution2_cost(crabs, &1))
-    IO.inspect(min(solutions))
+    b = min(solutions)
+    {a, b}
   end
 end
 
-AOC2021.day7()

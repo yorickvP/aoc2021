@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day1 do
   import Enum
 
   def countIncreases(xs) do
@@ -7,22 +7,19 @@ defmodule AOC2021 do
     |> count(fn [a, b] -> a < b end)
   end
 
-  def day1 do
-    numbers =
-      File.read!("day1_input")
-      |> String.split("\n", trim: true)
-      |> map(&String.to_integer/1)
+  def input_format do :lines end
+  def run(input) do
+    numbers = AOC2021.ints(input)
 
-    numbers
+    a = numbers
     |> countIncreases
-    |> IO.inspect()
 
-    numbers
+    b = numbers
     |> chunk_every(3, 1, :discard)
     |> map(&sum/1)
     |> countIncreases
-    |> IO.inspect()
+
+    {a, b}
   end
 end
 
-AOC2021.day1()

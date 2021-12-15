@@ -1,4 +1,4 @@
-defmodule AOC2021 do
+defmodule AOC2021.Day2 do
   import Enum
 
   def runSubNoAim(cmds) do
@@ -17,16 +17,16 @@ defmodule AOC2021 do
     end)
   end
 
-  def day2 do
-      cmds = File.read!("day2_input")
-      |> String.split("\n", trim: true)
-      |> map(&String.split(&1, " ", trim: true, parts: 2))
-      |> map(fn [d, f] -> {String.to_atom(d), String.to_integer(f)} end)
+  def input_format do :lines end
+  def run(input) do
+    cmds = for line <- input do
+      [d, f] = String.split(line, " ", trim: true, parts: 2)
+      {String.to_atom(d), String.to_integer(f)}
+    end
     {x, y} = runSubNoAim(cmds)
-    IO.inspect(x * y)
+    a = x * y
     {x, y, _aim} = runSubAim(cmds)
-    IO.inspect(x * y)
+    b = x * y
+    {a, b}
   end
 end
-
-AOC2021.day2()
