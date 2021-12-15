@@ -22,7 +22,7 @@ defmodule AOC2021 do
     Enum.map(input, &String.to_integer/1)
   end
   def run(day, test \\ false) do
-    m = String.to_existing_atom("Elixir.AOC2021.Day#{day}")
+    m = Module.safe_concat(AOC2021, "Day#{day}")
     input = get_input(day, test)
     input = case apply(m, :input_format, []) do
               nil -> input
