@@ -3,11 +3,13 @@ defmodule Mix.Tasks.Day do
 
   @impl Mix.Task
   def run(args) do
-    {a, b} =
+    {tc, {a, b}} =
       case args do
-        [day] -> AOC2021.run(String.to_integer(day))
-        [day, "--test"] -> AOC2021.run(String.to_integer(day), true)
+        [day] -> :timer.tc(fn -> AOC2021.run(String.to_integer(day)) end)
+        [day, "--test"] -> :timer.tc(fn -> AOC2021.run(String.to_integer(day), true) end)
       end
+
+    Mix.shell().info("took #{tc / 1_000_000} seconds")
 
     Mix.shell().info("<= Part 1 =>")
     IO.inspect(a)

@@ -34,8 +34,30 @@ defmodule AOC2021.Day9 do
       [n | r]
     end
 
+    def to_list(nil) do
+      raise "to_list(nil)"
+    end
+
     def to_list(other) do
       to_list(dec(other))
+    end
+
+    def repeat(z, count, mapper) do
+      # todo: loses position
+      list = to_list(z)
+
+      Stream.unfold(count, fn
+        0 -> nil
+        # todo: plus?
+        n -> {Enum.map(list, &mapper.(&1, count - n)), n - 1}
+      end)
+      |> Stream.concat()
+      |> Enum.to_list()
+      |> Zipper.make()
+    end
+
+    def to_string(z, str \\ &Integer.to_string/1, join \\ "") do
+      to_list(z) |> Enum.map(str) |> Enum.join(join)
     end
   end
 
@@ -47,7 +69,7 @@ defmodule AOC2021.Day9 do
     end
 
     def left(z) do
-      z |> map(&dec/1)
+      Zipper.map(z, &dec/1)
     end
 
     def right(z) do
@@ -76,6 +98,16 @@ defmodule AOC2021.Day9 do
 
     def get_or_nil(%Zipper{n: nil}) do
       nil
+    end
+
+    def neighbours(field) do
+      [
+        field |> Field.left(),
+        field |> Field.up(),
+        field |> Field.down(),
+        field |> Field.right()
+      ]
+      |> Enum.reject(&(is_nil(&1) || is_nil(&1.n)))
     end
 
     def set(z, n) do
@@ -111,6 +143,16 @@ defmodule AOC2021.Day9 do
           {field, acc} = reduce(field |> right, acc, f)
           {field |> left, acc}
       end
+    end
+
+    def repeat(z, n, mapper) do
+      Zipper.repeat(Zipper.map(z, &Zipper.repeat(&1, n, mapper)), n, fn z, i ->
+        Zipper.map(z, &mapper.(&1, i))
+      end)
+    end
+
+    def to_string(z) do
+      to_list(z) |> Enum.map(&Zipper.to_string/1) |> Enum.join("\n")
     end
   end
 

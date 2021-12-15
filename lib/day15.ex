@@ -3,39 +3,44 @@ defmodule AOC2021.Day15 do
     :lines
   end
 
-  def dijkstra_loop(q, prev, dist, hash, neighbours, length) do
+  def dijkstra_loop(q, prev, dist, hash, neighbours, length, target) do
     if PriorityQueue.empty?(q) do
       {dist, prev}
     else
       {{p, u}, q} = PriorityQueue.pop!(q)
 
-      if p == Map.get(dist, hash.(u)) do
-        {dist, prev, q} =
-          for v <- neighbours.(u), reduce: {dist, prev, q} do
-            {dist, prev, q} ->
-              alt = (dist |> Map.get(hash.(u), {:infinity})) + length.(u, v)
+      cond do
+        target != nil && hash.(u) == target ->
+          {dist, prev}
 
-              if alt < dist |> Map.get(hash.(v), {:infinity}) do
-                {Map.put(dist, hash.(v), alt), Map.put(prev, hash.(v), u),
-                 q |> PriorityQueue.put(alt, v)}
-              else
-                {dist, prev, q}
-              end
-          end
+        p == Map.get(dist, hash.(u)) ->
+          {dist, prev, q} =
+            for v <- neighbours.(u), reduce: {dist, prev, q} do
+              {dist, prev, q} ->
+                alt = (dist |> Map.get(hash.(u), {:infinity})) + length.(u, v)
 
-        dijkstra_loop(q, prev, dist, hash, neighbours, length)
-      else
-        dijkstra_loop(q, prev, dist, hash, neighbours, length)
+                if alt < dist |> Map.get(hash.(v), {:infinity}) do
+                  # Map.put(prev, hash.(v), u),
+                  {Map.put(dist, hash.(v), alt), prev, q |> PriorityQueue.put(alt, v)}
+                else
+                  {dist, prev, q}
+                end
+            end
+
+          dijkstra_loop(q, prev, dist, hash, neighbours, length, target)
+
+        true ->
+          dijkstra_loop(q, prev, dist, hash, neighbours, length, target)
       end
     end
   end
 
-  def dijkstra(source, hash, neighbours, length) do
+  def dijkstra(source, hash, neighbours, length, target \\ nil) do
     q = PriorityQueue.new() |> PriorityQueue.put(0, source)
 
     dist = %{hash.(source) => 0}
     prev = %{}
-    dijkstra_loop(q, prev, dist, hash, neighbours, length)
+    dijkstra_loop(q, prev, dist, hash, neighbours, length, target)
   end
 
   import Enum
@@ -49,23 +54,27 @@ defmodule AOC2021.Day15 do
 
     field = Field.make(entries)
     {tx, ty} = {length(entries), length(List.first(entries))}
+    target = {tx - 1, ty - 1}
+
+    {dist, _prev} =
+      dijkstra(field, &Field.pos/1, &Field.neighbours/1, fn _, v -> v.n.n end, target)
+
+    a = dist[target]
+
+    bigger_field = field |> Field.repeat(5, fn x, i -> rem(x + i - 1, 9) + 1 end)
+    bigger_target = {tx * 5 - 1, ty * 5 - 1}
 
     {dist, _prev} =
       dijkstra(
-        field,
+        bigger_field,
         &Field.pos/1,
-        fn field ->
-          [
-            field |> Field.left(),
-            field |> Field.up(),
-            field |> Field.down(),
-            field |> Field.right()
-          ]
-          |> reject(&(is_nil(&1) || is_nil(&1.n)))
-        end,
-        fn _, v -> v.n.n end
+        &Field.neighbours/1,
+        fn _, v -> v.n.n end,
+        bigger_target
       )
 
-    {dist[{tx - 1, ty - 1}], 0}
+    b = dist[bigger_target]
+
+    {a, b}
   end
 end
