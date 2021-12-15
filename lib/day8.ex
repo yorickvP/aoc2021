@@ -21,7 +21,10 @@ defmodule AOC2021.Day8 do
     end
   end
 
-  def input_format do :lines end
+  def input_format do
+    :lines
+  end
+
   def run(input) do
     entries =
       input
@@ -46,4 +49,3 @@ defmodule AOC2021.Day8 do
     {count}
   end
 end
-

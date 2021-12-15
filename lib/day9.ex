@@ -42,23 +42,41 @@ defmodule AOC2021.Day9 do
   defmodule Field do
     import Zipper
 
-    def make(arr) do Zipper.make(arr |> Enum.map(&Zipper.make/1)) end
+    def make(arr) do
+      Zipper.make(arr |> Enum.map(&Zipper.make/1))
+    end
 
-    def left(z) do z |> map(&dec/1) end
+    def left(z) do
+      z |> map(&dec/1)
+    end
 
-    def right(z) do Zipper.map(z, &inc/1) end
+    def right(z) do
+      Zipper.map(z, &inc/1)
+    end
 
-    def up(z) do dec(z) end
+    def up(z) do
+      dec(z)
+    end
 
-    def down(z) do inc(z) end
+    def down(z) do
+      inc(z)
+    end
 
-    def get_or_nil(nil) do nil end
+    def get_or_nil(nil) do
+      nil
+    end
 
-    def get_or_nil(%Zipper{n: %Zipper{n: n}}) do n end
+    def get_or_nil(%Zipper{n: %Zipper{n: n}}) do
+      n
+    end
 
-    def get_or_nil(%Zipper{n: nil}) do nil end
+    def get_or_nil(%Zipper{n: nil}) do
+      nil
+    end
 
-    def set(z, n) do Zipper.set(z, Zipper.set(z.n, n)) end
+    def set(z, n) do
+      Zipper.set(z, Zipper.set(z.n, n))
+    end
 
     def reduce(field, acc, f) do
       {field, acc} = f.(field, acc)
@@ -131,10 +149,34 @@ defmodule AOC2021.Day9 do
       field = set(field, 9)
       acc = acc + 1
 
-      {acc, field} = with {acc, nfield} <- flood_fill(field |> down, acc) do {acc, nfield |> up} else _ -> {acc, field} end
-      {acc, field} = with {acc, nfield} <- flood_fill(field |> up, acc) do {acc, nfield |> down} else _ -> {acc, field} end
-      {acc, field} = with {acc, nfield} <- flood_fill(field |> left, acc) do {acc, nfield |> right} else _ -> {acc, field} end
-      {acc, field} = with {acc, nfield} <- flood_fill(field |> right, acc) do {acc, nfield |> left} else _ -> {acc, field} end
+      {acc, field} =
+        with {acc, nfield} <- flood_fill(field |> down, acc) do
+          {acc, nfield |> up}
+        else
+          _ -> {acc, field}
+        end
+
+      {acc, field} =
+        with {acc, nfield} <- flood_fill(field |> up, acc) do
+          {acc, nfield |> down}
+        else
+          _ -> {acc, field}
+        end
+
+      {acc, field} =
+        with {acc, nfield} <- flood_fill(field |> left, acc) do
+          {acc, nfield |> right}
+        else
+          _ -> {acc, field}
+        end
+
+      {acc, field} =
+        with {acc, nfield} <- flood_fill(field |> right, acc) do
+          {acc, nfield |> left}
+        else
+          _ -> {acc, field}
+        end
+
       {acc, field}
     end
   end
@@ -152,18 +194,21 @@ defmodule AOC2021.Day9 do
     {field, acc}
   end
 
-  def input_format do :lines end
+  def input_format do
+    :lines
+  end
+
   def run(input) do
     entries =
       input
-      |> map(fn x -> split(x, "", trim: true) |> AOC2021.ints end)
+      |> map(fn x -> split(x, "", trim: true) |> AOC2021.ints() end)
 
     field = Field.make(entries)
     a = count_lows(field)
 
-    {_, acc} = get_basins(field) # todo: assert all 9's
+    # todo: assert all 9's
+    {_, acc} = get_basins(field)
     b = acc |> sort(:desc) |> take(3) |> product
     {a, b}
   end
 end
-

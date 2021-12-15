@@ -14,7 +14,8 @@ defmodule AOC2021.Day3 do
   def part1(bits) do
     res =
       bits
-      |> zip_with(& &1) # transpose
+      # transpose
+      |> zip_with(& &1)
       |> map(&count_bits/1)
 
     gamma = Integer.undigits(res, 2)
@@ -33,7 +34,10 @@ defmodule AOC2021.Day3 do
     end
   end
 
-  def input_format do :lines end
+  def input_format do
+    :lines
+  end
+
   def run(input) do
     bits =
       input
@@ -46,4 +50,3 @@ defmodule AOC2021.Day3 do
     {gamma * epsilon, oxy * co2}
   end
 end
-

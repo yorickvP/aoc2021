@@ -6,7 +6,10 @@ defmodule AOC2021.Day6 do
     [b, c, d, e, f, g, h + a, i, a]
   end
 
-  def input_format do :line end
+  def input_format do
+    :line
+  end
+
   def run(input) do
     empty = 0..8 |> into(%{}, &{&1, 0})
 
@@ -26,4 +29,3 @@ defmodule AOC2021.Day6 do
     {generations |> at(80 - 1) |> sum, generations |> at(256 - 1) |> sum}
   end
 end
-

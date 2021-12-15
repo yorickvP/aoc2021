@@ -14,7 +14,10 @@ defmodule AOC2021.Day7 do
     crabs |> reduce(0, fn x, acc -> acc + triang(abs(x - n)) end)
   end
 
-  def input_format do :line end
+  def input_format do
+    :line
+  end
+
   def run(input) do
     crabs =
       input
@@ -29,4 +32,3 @@ defmodule AOC2021.Day7 do
     {a, b}
   end
 end
-

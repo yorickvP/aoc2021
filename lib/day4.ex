@@ -39,9 +39,11 @@ defmodule AOC2021.Day4 do
     end
   end
 
-  def input_format do :sections end
-  def run([numbers | boards]) do
+  def input_format do
+    :sections
+  end
 
+  def run([numbers | boards]) do
     numbers = numbers |> split(",", trim: true) |> map(&to_integer/1)
 
     boards =
@@ -55,4 +57,3 @@ defmodule AOC2021.Day4 do
     {score_a, score_b}
   end
 end
-

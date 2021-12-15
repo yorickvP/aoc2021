@@ -16,7 +16,10 @@ defmodule AOC2021.Day13 do
     end
   end
 
-  def input_format do nil end
+  def input_format do
+    nil
+  end
+
   def run(input) do
     [points, folds] = input |> split("\n\n", trim: true)
 
@@ -43,16 +46,17 @@ defmodule AOC2021.Day13 do
     {max_x, max_y} =
       folded |> reduce({0, 0}, fn {a, b}, {x, y} -> {Kernel.max(a, x), Kernel.max(b, y)} end)
 
-    b = for y <- 0..max_y, into: "" do
-      for x <- 0..max_x, into: "" do
-        if folded |> MapSet.member?({x, y}) do
-          "#"
-        else
-          " "
-        end
-      end <> "\n"
-    end
+    b =
+      for y <- 0..max_y, into: "" do
+        for x <- 0..max_x, into: "" do
+          if folded |> MapSet.member?({x, y}) do
+            "#"
+          else
+            " "
+          end
+        end <> "\n"
+      end
+
     {a, b}
   end
 end
-

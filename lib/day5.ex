@@ -64,7 +64,10 @@ defmodule AOC2021.Day5 do
     points |> count(fn {_, x} -> x > 1 end)
   end
 
-  def input_format do :lines end
+  def input_format do
+    :lines
+  end
+
   def run(input) do
     lines =
       for line <- input do
@@ -77,4 +80,3 @@ defmodule AOC2021.Day5 do
     {a, b}
   end
 end
-
