@@ -27,6 +27,6 @@ defmodule AOC2021Test do
   # aoc_test(11, {1656})
   # aoc_test(12, {10})
   aoc_test(13, {17, "#####\n#   #\n#   #\n#   #\n#####\n"})
-  # aoc_test(14, {1588})
+  aoc_test(14, {1588, 2_188_189_693_529})
   aoc_test(15, {40, 315})
 end

@@ -3,6 +3,8 @@ defmodule Mix.Tasks.Day do
 
   @impl Mix.Task
   def run(args) do
+    Mix.Task.run("app.start")
+
     {tc, {a, b}} =
       case args do
         [day] -> :timer.tc(fn -> AOC2021.run(String.to_integer(day)) end)
