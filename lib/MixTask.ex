@@ -3,8 +3,11 @@ defmodule Mix.Tasks.Day do
   use Mix.Task
 
   @impl Mix.Task
-  def run([day]) do
-    {a, b} = AOC2021.run(String.to_integer(day))
+  def run(args) do
+    {a, b} = case args do
+      [day] -> AOC2021.run(String.to_integer(day))
+      [day, "--test"] -> AOC2021.run(String.to_integer(day), true)
+             end
     Mix.shell().info("<= Part 1 =>")
     IO.inspect(a)
     Mix.shell().info("<= Part 2 =>")

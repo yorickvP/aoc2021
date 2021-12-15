@@ -12,19 +12,18 @@ defmodule AOC2021 do
       :world
 
   """
-  def get_input(day) do
-    File.read!("inputs/day#{day}_input")
+  def get_input(day, true) do
+    File.read!("inputs/day#{day}_test")
   end
-  def get_input_lines(day) do
+  def get_input(day, false) do
     File.read!("inputs/day#{day}_input")
-    |> String.split("\n", trim: true)
   end
   def ints(input) do
     Enum.map(input, &String.to_integer/1)
   end
-  def run(day) do
+  def run(day, test \\ false) do
     m = String.to_existing_atom("Elixir.AOC2021.Day#{day}")
-    input = get_input(day)
+    input = get_input(day, test)
     input = case apply(m, :input_format, []) do
               nil -> input
               :lines -> String.split(input, "\n", trim: true)
