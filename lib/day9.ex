@@ -30,6 +30,13 @@ defmodule AOC2021.Day9 do
       %Zipper{left: Enum.map(z.left, f), n: f.(z.n), right: Enum.map(z.right, f), pos: z.pos}
     end
 
+    def each(z, f) do
+      :ok = Enum.each(z.left, f)
+      f.(z.n)
+      :ok = Enum.each(z.right, f)
+      :ok
+    end
+
     def to_list(%Zipper{left: [], n: n, right: r}) do
       [n | r]
     end
@@ -100,18 +107,36 @@ defmodule AOC2021.Day9 do
       nil
     end
 
-    def neighbours(field) do
-      [
-        field |> Field.left(),
-        field |> Field.up(),
-        field |> Field.down(),
-        field |> Field.right()
-      ]
+    def neighbours(field, diag \\ false) do
+      ([
+         field |> Field.left(),
+         field |> Field.up(),
+         field |> Field.down(),
+         field |> Field.right()
+       ] ++
+         if diag do
+           [
+             field |> Field.left() |> Field.up(),
+             field |> Field.left() |> Field.down(),
+             field |> Field.right() |> Field.up(),
+             field |> Field.right() |> Field.down()
+           ]
+         else
+           []
+         end)
       |> Enum.reject(&(is_nil(&1) || is_nil(&1.n)))
     end
 
     def set(z, n) do
       Zipper.set(z, Zipper.set(z.n, n))
+    end
+
+    def map(field, f) do
+      Zipper.map(field, &Zipper.map(&1, f))
+    end
+
+    def each(field, f) do
+      Zipper.each(field, &Zipper.each(&1, f))
     end
 
     def reduce(field, acc, f) do
