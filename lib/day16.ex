@@ -1,4 +1,9 @@
 defmodule AOC2021.Day16 do
+  defmodule Packet do
+    @enforce_keys [:version, :type, :contents]
+    defstruct [:version, :type, :contents]
+  end
+
   def input_format do
     nil
   end
@@ -38,18 +43,18 @@ defmodule AOC2021.Day16 do
 
   def parse(<<v::3, @literal::3, contents::bitstring>>) do
     {n, rest} = parse_literal(0, contents)
-    {{v, :literal, n}, rest}
+    {%Packet{version: v, type: :literal, contents: n}, rest}
   end
 
   # operator, length type 0
   def parse(<<v::3, t::3, 0::1, l::15, sub::bitstring-size(l), rest::bitstring>>) do
-    {{v, :operator, operator_decode(t), parse_all(sub)}, rest}
+    {%Packet{version: v, type: operator_decode(t), contents: parse_all(sub)}, rest}
   end
 
   # operator, length type 1
   def parse(<<v::3, t::3, 1::1, l::11, rest::bitstring>>) do
     {n, rest} = parse_multiple(rest, l)
-    {{v, :operator, operator_decode(t), n}, rest}
+    {%Packet{version: v, type: operator_decode(t), contents: n}, rest}
   end
 
   def parse_multiple(str, 0) do
@@ -72,19 +77,19 @@ defmodule AOC2021.Day16 do
     end
   end
 
-  def version_sum({v, :literal, _}) do
+  def version_sum(%Packet{version: v, type: :literal}) do
     v
   end
 
-  def version_sum({v, :operator, _, contents}) do
+  def version_sum(%Packet{version: v, contents: contents}) do
     v + (contents |> map(&version_sum/1) |> sum)
   end
 
-  def eval({_, :literal, n}) do
+  def eval(%Packet{type: :literal, contents: n}) do
     n
   end
 
-  def eval({_, :operator, op, f}) do
+  def eval(%Packet{type: op, contents: f}) do
     case {op, map(f, &eval/1)} do
       {:sum, x} ->
         sum(x)
