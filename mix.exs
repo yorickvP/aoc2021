@@ -7,7 +7,8 @@ defmodule Aoc2021.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: [plt_add_apps: [:mix]]
     ]
   end
 
@@ -23,7 +24,8 @@ defmodule Aoc2021.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       {:priority_queue, "~> 1.0.0"},
-      {:memoize, "~> 1.4"}
+      {:memoize, "~> 1.4"},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
