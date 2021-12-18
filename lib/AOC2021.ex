@@ -33,6 +33,8 @@ defmodule AOC2021 do
         nil ->
           input
 
+        :trim -> input |> String.trim()
+
         :lines ->
           String.split(input, "\n", trim: true)
 
