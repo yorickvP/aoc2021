@@ -60,14 +60,15 @@ defmodule AOC2021.Day18 do
   end
 
   def explode({a, b}, n, depth) do
-    with {nil, ^a} <- explode(a, n, depth + 1) do
-      with {nil, ^b} <- explode(b, n + count_lits(a), depth + 1) do
-        {nil, {a, b}}
-      else
-        {:ex, exp, x} -> {:ex, exp, {a, x}}
-      end
-    else
-      {:ex, exp, x} -> {:ex, exp, {x, b}}
+    case explode(a, n, depth + 1) do
+      {nil, ^a} ->
+        case explode(b, n + count_lits(a), depth + 1) do
+          {nil, ^b} -> {nil, {a, b}}
+          {:ex, exp, x} -> {:ex, exp, {a, x}}
+        end
+
+      {:ex, exp, x} ->
+        {:ex, exp, {x, b}}
     end
   end
 
@@ -76,9 +77,8 @@ defmodule AOC2021.Day18 do
   end
 
   def split({a, b}) do
-    with ^a <- split(a) do
-      {a, split(b)}
-    else
+    case split(a) do
+      ^a -> {a, split(b)}
       a -> {a, b}
     end
   end
