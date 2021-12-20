@@ -18,6 +18,11 @@ defmodule AOC2021.Day18 do
     end
   end
 
+  def parse_one(x) do
+    {x, ""} = parse(x)
+    x
+  end
+
   def count_lits({a, b}) do
     count_lits(a) + count_lits(b)
   end
@@ -39,9 +44,10 @@ defmodule AOC2021.Day18 do
   end
 
   def explode(x) do
-    with {nil, ^x} <- explode(x, 0, 0) do
-      x
-    else
+    case explode(x, 0, 0) do
+      {nil, ^x} ->
+        x
+
       {:ex, {n, a, b}, r} ->
         r
         |> update_nth(n - 1, &(&1 + a))
@@ -108,11 +114,6 @@ defmodule AOC2021.Day18 do
 
   def add(x) do
     x |> reduce(&add(&2, &1))
-  end
-
-  def parse_one(x) do
-    {x, ""} = parse(x)
-    x
   end
 
   def run(input) do
