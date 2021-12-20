@@ -30,6 +30,7 @@ defmodule AOC2021Test do
   aoc_test(14, {1588, 2_188_189_693_529})
   aoc_test(15, {40, 315})
   aoc_test(16, {31, 54})
+  aoc_test(18, {4140, nil})
   @tag day: 16
   test "day 16 / operators" do
     import AOC2021.Day16
@@ -41,5 +42,25 @@ defmodule AOC2021Test do
     assert to_bits("F600BC2D8F") |> parse |> elem(0) |> eval == 0
     assert to_bits("9C005AC2F8F0") |> parse |> elem(0) |> eval == 0
     assert to_bits("9C0141080250320F1802104A08") |> parse |> elem(0) |> eval == 1
+  end
+
+  @tag day: 18
+  test "day 18 / explode" do
+    import AOC2021.Day18
+    assert explode({{{{{9, 8}, 1}, 2}, 3}, 4}) == {{{{0, 9}, 2}, 3}, 4}
+    assert explode({7, {6, {5, {4, {3, 2}}}}}) == {7, {6, {5, {7, 0}}}}
+    assert explode({{6, {5, {4, {3, 2}}}}, 1}) == {{6, {5, {7, 0}}}, 3}
+
+    assert explode({{3, {2, {1, {7, 3}}}}, {6, {5, {4, {3, 2}}}}}) ==
+             {{3, {2, {8, 0}}}, {9, {5, {4, {3, 2}}}}}
+
+    assert explode({{3, {2, {8, 0}}}, {9, {5, {4, {3, 2}}}}}) ==
+             {{3, {2, {8, 0}}}, {9, {5, {7, 0}}}}
+  end
+
+  @tag day: 18
+  test "day 18 / add" do
+    import AOC2021.Day18
+    assert add([{1, 1}, {2, 2}, {3, 3}, {4, 4}]) == parse_one("[[[[1,1],[2,2]],[3,3]],[4,4]]")
   end
 end
